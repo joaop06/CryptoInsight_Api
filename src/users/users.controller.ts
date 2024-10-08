@@ -1,5 +1,6 @@
 import { UserEntity } from './user.entity';
 import { UsersService } from './users.service';
+import { Public } from 'src/auth/jwt-auth-guard';
 import { Controller, Get, Post, Delete, Param, Body, Patch } from '@nestjs/common';
 
 @Controller('users')
@@ -12,6 +13,7 @@ export class UsersController {
     }
 
     @Post()
+    @Public()
     create(@Body() userObject: UserEntity): Promise<UserEntity> {
         return this.usersService.create(userObject);
     }
