@@ -3,16 +3,17 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UsersServiceInterface } from './interfaces/user.service.interface';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements UsersServiceInterface {
     constructor(
         @InjectRepository(UserEntity)
-        private usersRepository: Repository<UserEntity>
+        private repository: Repository<UserEntity>
     ) { }
 
     async findOne(id: number): Promise<UserEntity> {
-        const result = await this.usersRepository.findOneBy({ id });
+        const result = await this.repository.findOneBy({ id });
 
         return { ...result, password: undefined };
     }
@@ -23,21 +24,21 @@ export class UsersService {
             password: await bcrypt.hash(object.password, 10)
         };
 
-        const result = await this.usersRepository.save(object);
+        const result = await this.repository.save(object);
         return { ...result, password: undefined };
     }
 
     async update(id: number, object: Partial<UserEntity>): Promise<any> {
         delete object.password
-        return await this.usersRepository.update(id, object);
+        return await this.repository.update(id, object);
     }
 
     async delete(id: number): Promise<any> {
-        return await this.usersRepository.softDelete(id);
+        return await this.repository.softDelete(id);
     }
 
     async findOneByEmail(email: string): Promise<UserEntity> {
-        return await this.usersRepository.findOneBy({ email });
+        return await this.repository.findOneBy({ email });
     }
 
     async changePassword(changePasswordDto: { userId: number; oldPassword: string; newPassword: string }): Promise<any> {
@@ -48,6 +49,6 @@ export class UsersService {
         if (!passwordMatch) throw new Error('Invalid old password');
 
         const newHashedPassword = await bcrypt.hash(changePasswordDto.newPassword, 10);
-        return await this.usersRepository.update(userId, { password: newHashedPassword });
+        return await this.repository.update(userId, { password: newHashedPassword });
     }
 }

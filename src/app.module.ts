@@ -8,6 +8,10 @@ import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
 import { JwtAuthGuard } from './auth/jwt-auth-guard';
+import { InvestmentsModule } from './investments/investments.module';
+import { InvestmentsService } from './investments/investments.service';
+import { InvestmentsController } from './investments/investments.controller';
+import { CryptoCurrencyModule } from './crypto-currency/crypto-currency.module';
 
 @Module({
   imports: [
@@ -24,8 +28,10 @@ import { JwtAuthGuard } from './auth/jwt-auth-guard';
       synchronize: process.env.NODE_ENV !== 'production',
     }),
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    CryptoCurrencyModule,
+    InvestmentsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, InvestmentsController],
   providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],
 })
 export class AppModule { }

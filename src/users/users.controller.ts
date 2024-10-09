@@ -5,31 +5,31 @@ import { Controller, Get, Post, Delete, Param, Body, Patch } from '@nestjs/commo
 
 @Controller('users')
 export class UsersController {
-    constructor(private readonly usersService: UsersService) { }
+    constructor(private readonly service: UsersService) { }
 
     @Get(':id')
     findOne(@Param('id') id: string): Promise<UserEntity> {
-        return this.usersService.findOne(+id);
+        return this.service.findOne(+id);
     }
 
     @Post()
     @Public()
-    create(@Body() userObject: UserEntity): Promise<UserEntity> {
-        return this.usersService.create(userObject);
+    create(@Body() object: UserEntity): Promise<UserEntity> {
+        return this.service.create(object);
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() userObject: Partial<UserEntity>): Promise<any> {
-        return this.usersService.update(+id, userObject);
+    update(@Param('id') id: string, @Body() object: Partial<UserEntity>): Promise<any> {
+        return this.service.update(+id, object);
     }
 
     @Delete(':id')
     delete(@Param('id') id: string): Promise<any> {
-        return this.usersService.delete(+id);
+        return this.service.delete(+id);
     }
 
     @Post('change-password')
     changePassword(@Body() changePasswordDto: { userId: number; oldPassword: string; newPassword: string }) {
-        return this.usersService.changePassword(changePasswordDto);
+        return this.service.changePassword(changePasswordDto);
     }
 }
