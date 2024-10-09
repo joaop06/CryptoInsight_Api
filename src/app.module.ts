@@ -9,7 +9,6 @@ import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
 import { JwtAuthGuard } from './auth/jwt-auth-guard';
 import { InvestmentsModule } from './investments/investments.module';
-import { InvestmentsService } from './investments/investments.service';
 import { InvestmentsController } from './investments/investments.controller';
 import { CryptoCurrencyModule } from './crypto-currency/crypto-currency.module';
 

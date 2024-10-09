@@ -1,7 +1,7 @@
 import { Public } from './jwt-auth-guard';
 import { AuthService } from './auth.service';
 import { Post, Body, Controller } from '@nestjs/common';
-import { LoginDto } from 'src/users/interfaces/dto.interface';
+import { LoginDto, ValidLoginDto } from './interfaces/auth.dto.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -9,8 +9,8 @@ export class AuthController {
 
     @Public()
     @Post('login')
-    async login(@Body() loginDto: LoginDto) {
-        const user = await this.authService.validateUser(loginDto.email, loginDto.password);
+    async login(@Body() object: LoginDto): Promise<ValidLoginDto> {
+        const user = await this.authService.validateUser(object);
 
         if (!user) {
             return { message: 'Invalid credentials' };

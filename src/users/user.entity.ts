@@ -7,11 +7,10 @@ import {
     UpdateDateColumn,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserEntityInterface } from './interfaces/user.entity.interface'
 import { InvestmentsEntity } from 'src/investments/investments.entity';
 
 @Entity('users')
-export class UserEntity implements UserEntityInterface {
+export class UserEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
