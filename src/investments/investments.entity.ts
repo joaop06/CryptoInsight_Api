@@ -16,10 +16,10 @@ export class InvestmentsEntity {
     id: number;
 
     @Column()
-    symbol: string;
+    value: number;
 
     @Column()
-    value: number;
+    symbol: string;
 
     // Define relacionamento OneToOne com User
     @OneToOne(() => UserEntity, (user) => user.investment, { onDelete: 'CASCADE' })

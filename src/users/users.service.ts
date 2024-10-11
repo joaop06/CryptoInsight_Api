@@ -21,14 +21,14 @@ export class UsersService implements UsersServiceInterface {
         private repository: Repository<UserEntity>
     ) { }
 
-    #removePassword(user) {
+    private removePassword(user) {
         return { result: { ...user, password: undefined } };
     }
 
     async findOne(id: number): Promise<FindOneUserReturnDto> {
         const user = await this.repository.findOneBy({ id });
 
-        return this.#removePassword(user);
+        return this.removePassword(user);
     }
 
     async findAll(options: FindAllUserDto): Promise<FindAllUserReturnDto> {
@@ -41,14 +41,14 @@ export class UsersService implements UsersServiceInterface {
         const password = await bcrypt.hash(object.password, 10);
         const user = await this.repository.save({ ...object, password });
 
-        return this.#removePassword(user);
+        return this.removePassword(user);
     }
 
     async update(id: number, object: Partial<UserEntity>): Promise<UpdateUserReturnDto> {
         delete object.password
         const user = await this.repository.update(id, object);
 
-        return this.#removePassword(user);
+        return this.removePassword(user);
     }
 
     async delete(id: number): Promise<any> {

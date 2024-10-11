@@ -3,14 +3,14 @@ import { CreateReturnDto } from './dto/create.dto';
 import { UpdateReturnDto } from './dto/update.dto';
 import { FindOneDto, FindOneReturnDto, FindAllDto, FindAllReturnDto } from './dto/find.dto';
 
-export interface ControllerInterface<T> {
-    delete(id: DeleteDto): Promise<any>
+export interface ControllerInterface<Entity> {
+    delete(id: string): Promise<any>
 
-    create(object: T): Promise<CreateReturnDto<T>>
+    create(object: Entity): Promise<CreateReturnDto<Entity>>
 
-    findOne(id: FindOneDto): Promise<FindOneReturnDto<T>>
+    findOne(id: string): Promise<FindOneReturnDto<Entity>>
 
-    findAll(options: FindAllDto<T>): Promise<FindAllReturnDto<T>>
+    findAll(options: FindAllDto<Entity>): Promise<FindAllReturnDto<Entity>>
 
-    update(id: string, object: Partial<T>): Promise<UpdateReturnDto<T>>
+    update(id: string, object: Partial<Entity>): Promise<UpdateReturnDto<Entity>>
 }
