@@ -1,16 +1,13 @@
-import { DeleteDto } from './dto/delete.dto';
-import { CreateReturnDto } from './dto/create.dto';
-import { UpdateReturnDto } from './dto/update.dto';
-import { FindOneDto, FindOneReturnDto, FindAllDto, FindAllReturnDto } from './dto/find.dto';
+import { FindDto, FindReturnDto } from "./dto/find.dto";
 
-export interface ControllerInterface<Entity> {
+export interface ControllerInterface<Entity, CreateDto> {
     delete(id: string): Promise<any>
 
-    create(object: Entity): Promise<CreateReturnDto<Entity>>
+    findOne(id: string): Promise<Entity>
 
-    findOne(id: string): Promise<FindOneReturnDto<Entity>>
+    create(object: CreateDto): Promise<Entity>
 
-    findAll(options: FindAllDto<Entity>): Promise<FindAllReturnDto<Entity>>
+    update(id: string, object: Partial<Entity>): Promise<any>
 
-    update(id: string, object: Partial<Entity>): Promise<UpdateReturnDto<Entity>>
+    findAll(options: FindDto<Entity>): Promise<FindReturnDto<Entity>>
 }

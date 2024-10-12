@@ -19,7 +19,7 @@ export class CryptoCurrencyController implements CryptoCurrencyControllerInterfa
     constructor(private readonly service: CryptoCurrencyService) { }
 
     @Get(':id')
-    findOne(@Param() id: FindOneCryptoCurrencyDto): Promise<FindOneCryptoCurrencyReturnDto> {
+    findOne(@Param('id') id: FindOneCryptoCurrencyDto): Promise<FindOneCryptoCurrencyReturnDto> {
         return this.service.findOne(+id);
     }
 
@@ -34,12 +34,12 @@ export class CryptoCurrencyController implements CryptoCurrencyControllerInterfa
     }
 
     @Patch(':id')
-    update(@Param() id: string, object: UpdateCryptoCurrencyDto): Promise<UpdateCryptoCurrencyReturnDto> {
+    update(@Param('id') id: string, object: UpdateCryptoCurrencyDto): Promise<UpdateCryptoCurrencyReturnDto> {
         return this.service.update(+id, object);
     }
 
     @Delete(':id')
-    delete(@Param() id: DeleteCryptoCurrencyDto): Promise<any> {
+    delete(@Param('id') id: DeleteCryptoCurrencyDto): Promise<any> {
         return this.service.delete(+id);
     }
 }

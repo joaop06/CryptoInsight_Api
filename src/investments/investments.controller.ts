@@ -1,36 +1,38 @@
-import { Controller } from '@nestjs/common';
 import { InvestmentsEntity } from './investments.entity';
-import { ControllerInterface } from 'interfaces/ControllerInterface';
-import { CreateReturnDto } from 'interfaces/dto/create.dto';
-import { DeleteDto } from 'interfaces/dto/delete.dto';
-import { FindOneDto, FindOneReturnDto, FindAllDto, FindAllReturnDto } from 'interfaces/dto/find.dto';
-import { UpdateReturnDto } from 'interfaces/dto/update.dto';
 import { InvestmentsService } from './investments.service';
+import { FindDto, FindReturnDto } from 'interfaces/dto/find.dto';
+import { CreateInvestmentDto } from './dto/create-investment.dto';
+import { Controller, Delete, Get, Patch, Post, Param, Req } from '@nestjs/common';
+import { InvestmentsControllerInterface } from './interfaces/investments.controller.interface';
 
 @Controller('investments')
-export class InvestmentsController implements ControllerInterface<InvestmentsEntity> {
+export class InvestmentsController implements InvestmentsControllerInterface {
     constructor(
         private readonly service: InvestmentsService
     ) { }
 
-
-    delete(id: string): Promise<any> {
+    @Delete(':id')
+    delete(@Param('id') id: string): Promise<any> {
         return this.service.delete(+id);
     }
 
-    create(object: InvestmentsEntity): Promise<CreateReturnDto<InvestmentsEntity>> {
-        throw new Error('Method not implemented.');
+    @Get(':id')
+    findOne(@Param('id') id: string): Promise<InvestmentsEntity> {
+        return this.service.findOne(+id);
     }
 
-    findOne(id: FindOneDto): Promise<FindOneReturnDto<InvestmentsEntity>> {
-        throw new Error('Method not implemented.');
+    @Post()
+    create(object: CreateInvestmentDto): Promise<InvestmentsEntity> {
+        return this.service.create(object);
     }
 
-    findAll(options: FindAllDto<InvestmentsEntity>): Promise<FindAllReturnDto<InvestmentsEntity>> {
-        throw new Error('Method not implemented.');
+    @Get()
+    findAll(@Req() options: FindDto<InvestmentsEntity>): Promise<FindReturnDto<InvestmentsEntity>> {
+        return this.service.findAll(options);
     }
 
-    update(id: string, object: Partial<InvestmentsEntity>): Promise<UpdateReturnDto<InvestmentsEntity>> {
-        throw new Error('Method not implemented.');
+    @Patch(':id')
+    update(@Param('id') id: string, object: Partial<InvestmentsEntity>): Promise<any> {
+        return this.service.update(+id, object);
     }
 }
