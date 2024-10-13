@@ -2,7 +2,9 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { LoginDto, ValidUserDto, ValidLoginDto } from './interfaces/auth.dto.interface';
+import { LoginDto } from './dto/login.dto';
+import { ValidUserDto } from './dto/valid-user.dto';
+import { ValidatedLoginDto } from './dto/validated-login.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,9 +25,12 @@ export class AuthService {
         return null;
     }
 
-    async login(user: ValidUserDto): Promise<ValidLoginDto> {
+    async login(user: ValidUserDto): Promise<ValidatedLoginDto> {
         const payload = { email: user.email, sub: user.id };
 
-        return { accessToken: this.jwtService.sign(payload) };
+        return {
+            message: 'Login realizado com sucesso!',
+            accessToken: this.jwtService.sign(payload)
+        };
     }
 }

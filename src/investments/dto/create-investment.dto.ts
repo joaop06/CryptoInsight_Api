@@ -2,14 +2,14 @@ import { IsString, IsNumber, IsNotEmpty } from "class-validator";
 
 export class CreateInvestmentDto {
     @IsNumber()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'Valor de investimento não informado' })
     value: number;
 
     @IsString()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'Símbolo Cryptomoeda não informada' })
     symbol: string;
 
     @IsNumber()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'Usuário não informado' })
     userId: number;
 }

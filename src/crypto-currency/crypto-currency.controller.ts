@@ -1,45 +1,36 @@
 import { CryptoCurrencyEntity } from './crypto-currency.entity';
+import { FindDto, FindReturnDto } from 'interfaces/dto/find.dto';
 import { CryptoCurrencyService } from './crypto-currency.service';
-import { Controller, Post, Get, Patch, Delete, Body, Param } from '@nestjs/common';
+import { CreateCryptoCurrencyDto } from './dto/create-crypto-currency.dto';
+import { Controller, Post, Get, Patch, Delete, Body, Param, Req } from '@nestjs/common';
 import { CryptoCurrencyControllerInterface } from './interfaces/crypto-currency.controller.interface';
-
-import {
-    DeleteCryptoCurrencyDto,
-    UpdateCryptoCurrencyDto,
-    FindAllCryptoCurrencyDto,
-    FindOneCryptoCurrencyDto,
-    CreateCryptoCurrencyReturnDto,
-    UpdateCryptoCurrencyReturnDto,
-    FindAllCryptoCurrencyReturnDto,
-    FindOneCryptoCurrencyReturnDto,
-} from './interfaces/crypto-currency.dto.interface';
 
 @Controller('crypto-currency')
 export class CryptoCurrencyController implements CryptoCurrencyControllerInterface {
     constructor(private readonly service: CryptoCurrencyService) { }
 
+    @Delete(':id')
+    delete(@Param('id') id: string): Promise<any> {
+        return this.service.delete(+id);
+    }
+
     @Get(':id')
-    findOne(@Param('id') id: FindOneCryptoCurrencyDto): Promise<FindOneCryptoCurrencyReturnDto> {
+    findOne(@Param('id') id: string): Promise<CryptoCurrencyEntity> {
         return this.service.findOne(+id);
     }
 
-    @Get()
-    findAll(options: FindAllCryptoCurrencyDto): Promise<FindAllCryptoCurrencyReturnDto> {
-        return this.service.findAll(options);
-    }
-
     @Post()
-    create(@Body() object: CryptoCurrencyEntity): Promise<CreateCryptoCurrencyReturnDto> {
+    create(@Body() object: CreateCryptoCurrencyDto): Promise<CryptoCurrencyEntity> {
         return this.service.create(object);
     }
 
-    @Patch(':id')
-    update(@Param('id') id: string, object: UpdateCryptoCurrencyDto): Promise<UpdateCryptoCurrencyReturnDto> {
+    @Patch()
+    update(@Param('id') id: string, object: Partial<CryptoCurrencyEntity>): Promise<any> {
         return this.service.update(+id, object);
     }
 
-    @Delete(':id')
-    delete(@Param('id') id: DeleteCryptoCurrencyDto): Promise<any> {
-        return this.service.delete(+id);
+    @Get()
+    findAll(@Req() options: FindDto<CryptoCurrencyEntity>): Promise<FindReturnDto<CryptoCurrencyEntity>> {
+        return this.service.findAll(options);
     }
 }

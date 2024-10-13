@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { InvestmentsService } from './investments.service';
-import { InvestmentsController } from './investments.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InvestmentsEntity } from './investments.entity';
+import { InvestmentsService } from './investments.service';
+import { InvestmentsController } from './investments.controller';
 
 @Module({
     exports: [InvestmentsService],

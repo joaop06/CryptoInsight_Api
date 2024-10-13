@@ -1,4 +1,4 @@
-import { ServiceInterface } from "interfaces/ServiceInterface";
+import { ServiceInterface } from "interfaces/service.interface";
 import { CreateInvestmentDto } from "../dto/create-investment.dto";
 import { InvestmentsEntity as Entity } from "../investments.entity";
 

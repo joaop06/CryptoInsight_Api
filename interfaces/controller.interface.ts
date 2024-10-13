@@ -1,4 +1,4 @@
-import { FindDto, FindReturnDto } from "./dto/find.dto";
+import { FindDto, FindReturnDto } from "../dto/find.dto";
 
 export interface ControllerInterface<Entity, CreateDto> {
     delete(id: string): Promise<any>

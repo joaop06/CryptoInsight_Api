@@ -1,21 +1,26 @@
 require('dotenv').config()
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtAuthGuard } from './auth/jwt/jwt-auth-guard';
+
 import { AuthModule } from './auth/auth.module';
-import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
-import { JwtAuthGuard } from './auth/jwt-auth-guard';
 import { InvestmentsModule } from './investments/investments.module';
-import { InvestmentsController } from './investments/investments.controller';
 import { CryptoCurrencyModule } from './crypto-currency/crypto-currency.module';
+
+import { AuthController } from './auth/auth.controller';
+import { UsersController } from './users/users.controller';
+import { InvestmentsController } from './investments/investments.controller';
+import { CryptoCurrencyController } from './crypto-currency/crypto-currency.controller';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
+    InvestmentsModule,
+    CryptoCurrencyModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -27,10 +32,8 @@ import { CryptoCurrencyModule } from './crypto-currency/crypto-currency.module';
       synchronize: process.env.NODE_ENV !== 'production',
     }),
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
-    CryptoCurrencyModule,
-    InvestmentsModule,
   ],
-  controllers: [AppController, InvestmentsController],
-  providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],
+  providers: [{ provide: APP_GUARD, useClass: JwtAuthGuard }],
+  controllers: [AuthController, UsersController, InvestmentsController, CryptoCurrencyController],
 })
 export class AppModule { }

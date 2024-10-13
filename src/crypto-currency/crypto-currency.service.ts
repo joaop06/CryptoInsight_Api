@@ -2,18 +2,10 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CryptoCurrencyEntity } from './crypto-currency.entity';
+import { FindDto, FindReturnDto } from 'interfaces/dto/find.dto';
+import { CreateCryptoCurrencyDto } from './dto/create-crypto-currency.dto';
 import { CryptoCurrencyServiceInterface } from './interfaces/crypto-currency.service.interface';
 
-import {
-    DeleteCryptoCurrencyDto,
-    UpdateCryptoCurrencyDto,
-    FindAllCryptoCurrencyDto,
-    FindOneCryptoCurrencyDto,
-    CreateCryptoCurrencyReturnDto,
-    UpdateCryptoCurrencyReturnDto,
-    FindAllCryptoCurrencyReturnDto,
-    FindOneCryptoCurrencyReturnDto,
-} from './interfaces/crypto-currency.dto.interface';
 @Injectable()
 export class CryptoCurrencyService implements CryptoCurrencyServiceInterface {
     constructor(
@@ -21,28 +13,24 @@ export class CryptoCurrencyService implements CryptoCurrencyServiceInterface {
         private repository: Repository<CryptoCurrencyEntity>
     ) { }
 
-    async findOne(id: number): Promise<FindOneCryptoCurrencyReturnDto> {
-        const crypto = await this.repository.findOneBy({ id });
-        return { result: crypto };
+    async delete(id: number): Promise<any> {
+        return await this.repository.softDelete(id);
     }
 
-    async findAll(options: FindAllCryptoCurrencyDto): Promise<FindAllCryptoCurrencyReturnDto> {
-        const [rows, count] = await this.repository.findAndCount(options)
-
-        return { rows, count };
+    async findOne(id: number): Promise<CryptoCurrencyEntity> {
+        return await this.repository.findOneBy({ id });
     }
 
-    async create(object: CryptoCurrencyEntity): Promise<CreateCryptoCurrencyReturnDto> {
-        const crypto = await this.repository.save(object);
-
-        return { result: crypto };
+    async create(object: CreateCryptoCurrencyDto): Promise<CryptoCurrencyEntity> {
+        return this.repository.create(object);
     }
 
-    async update(id: number, object: UpdateCryptoCurrencyDto): Promise<any> {
+    async update(id: number, object: Partial<CryptoCurrencyEntity>): Promise<any> {
         return await this.repository.update(id, object);
     }
 
-    async delete(id: number): Promise<any> {
-        return await this.repository.softDelete(id);
+    async findAll(options: FindDto<CryptoCurrencyEntity>): Promise<FindReturnDto<CryptoCurrencyEntity>> {
+        const [rows, count] = await this.repository.findAndCount(options);
+        return { rows, count };
     }
 }
