@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { InvestmentsEntity } from './investments.entity';
-import { FindDto, FindReturnDto } from 'interfaces/dto/find.dto';
 import { CreateInvestmentDto } from './dto/create-investment.dto';
 import { InvestmentsServiceInterface } from './interfaces/investments.service.interface';
 

@@ -1,4 +1,4 @@
-import { FindDto } from '../interfaces/dto/find.dto';
+import { FindDto } from '../dto/find.dto';
 import { Response, Request, NextFunction } from 'express';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 

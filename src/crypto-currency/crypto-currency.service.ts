@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { CryptoCurrencyEntity } from './crypto-currency.entity';
-import { FindDto, FindReturnDto } from 'interfaces/dto/find.dto';
 import { CreateCryptoCurrencyDto } from './dto/create-crypto-currency.dto';
 import { CryptoCurrencyServiceInterface } from './interfaces/crypto-currency.service.interface';
 

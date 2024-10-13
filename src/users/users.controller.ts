@@ -2,9 +2,9 @@ import { UserEntity } from './user.entity';
 import { UsersService } from './users.service';
 import { Public } from 'src/auth/jwt/jwt-auth-guard';
 import { CreateUserDto } from './dto/create-user.dto';
+import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { UpdateUserDto } from './dto/update-user.dts';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { FindDto, FindReturnDto } from 'interfaces/dto/find.dto';
 import { UserControllerInterface } from './interfaces/user.controller.interface';
 import { Controller, Get, Post, Delete, Param, Body, Patch, Req } from '@nestjs/common';
 

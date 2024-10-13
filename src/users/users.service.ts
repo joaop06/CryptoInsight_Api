@@ -4,9 +4,9 @@ import { UserEntity } from './user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { UpdateUserDto } from './dto/update-user.dts';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { FindDto, FindReturnDto } from 'interfaces/dto/find.dto';
 import { UsersServiceInterface } from './interfaces/user.service.interface';
 
 @Injectable()

@@ -1,6 +1,6 @@
+import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { InvestmentsEntity } from './investments.entity';
 import { InvestmentsService } from './investments.service';
-import { FindDto, FindReturnDto } from 'interfaces/dto/find.dto';
 import { CreateInvestmentDto } from './dto/create-investment.dto';
 import { Controller, Delete, Get, Patch, Post, Param, Req } from '@nestjs/common';
 import { InvestmentsControllerInterface } from './interfaces/investments.controller.interface';
