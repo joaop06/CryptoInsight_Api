@@ -2,6 +2,7 @@ import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { Response, Request, NextFunction } from 'express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { FindOptionsMiddleware } from 'middlewares/find-options.middleware';
 
 async function bootstrap() {
@@ -16,6 +17,20 @@ async function bootstrap() {
 
   // Aplica o middleware globalmente em todas as rotas
   app.use((req: Request, res: Response, next: NextFunction) => new FindOptionsMiddleware().use(req, res, next));
+
+
+  /**
+   * Configuração do Swagger (Documentação)
+   */
+  const config = new DocumentBuilder()
+    .setTitle('API CryptoInsight')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
 
   await app.listen(3000);
 }
