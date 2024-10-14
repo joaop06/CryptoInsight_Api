@@ -1,6 +1,7 @@
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { Response, Request, NextFunction } from 'express';
 import { FindOptionsMiddleware } from 'middlewares/find-options.middleware';
 
 async function bootstrap() {
@@ -14,7 +15,7 @@ async function bootstrap() {
   }));
 
   // Aplica o middleware globalmente em todas as rotas
-  app.use(new FindOptionsMiddleware());
+  app.use((req: Request, res: Response, next: NextFunction) => new FindOptionsMiddleware().use(req, res, next));
 
   await app.listen(3000);
 }
