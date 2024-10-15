@@ -1,7 +1,7 @@
-import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { InvestmentsEntity } from './investments.entity';
 import { InvestmentsService } from './investments.service';
 import { CreateInvestmentDto } from './dto/create-investment.dto';
+import { FindOptionsDto, FindReturnModelDto } from 'dto/find.dto';
 import { Controller, Delete, Get, Patch, Post, Param, Req } from '@nestjs/common';
 import { InvestmentsControllerInterface } from './interfaces/investments.controller.interface';
 
@@ -27,7 +27,7 @@ export class InvestmentsController implements InvestmentsControllerInterface {
     }
 
     @Get()
-    findAll(@Req() options: FindDto<InvestmentsEntity>): Promise<FindReturnDto<InvestmentsEntity>> {
+    findAll(@Req() options: FindOptionsDto<InvestmentsEntity>): Promise<FindReturnModelDto<InvestmentsEntity>> {
         return this.service.findAll(options);
     }
 

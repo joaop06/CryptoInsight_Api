@@ -27,8 +27,6 @@ export class AllExceptionFilter implements ExceptionFilter {
 
         response.status(status).json({
             error,
-            // path: request.url,
-            // method: request.method,
             message: Array.isArray(message) ? message[0] : message,
         });
     }

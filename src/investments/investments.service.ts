@@ -1,9 +1,9 @@
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { InvestmentsEntity } from './investments.entity';
 import { CreateInvestmentDto } from './dto/create-investment.dto';
+import { FindOptionsDto, FindReturnModelDto } from 'dto/find.dto';
 import { InvestmentsServiceInterface } from './interfaces/investments.service.interface';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class InvestmentsService implements InvestmentsServiceInterface {
         return await this.repository.save(object);
     }
 
-    async findAll(options: FindDto<InvestmentsEntity>): Promise<FindReturnDto<InvestmentsEntity>> {
+    async findAll(options: FindOptionsDto<InvestmentsEntity>): Promise<FindReturnModelDto<InvestmentsEntity>> {
         const [rows, count] = await this.repository.findAndCount(options);
 
         return { rows, count }

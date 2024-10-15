@@ -4,11 +4,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BadRequestException } from '@nestjs/common';
 import { IsNumber, IsOptional, IsObject, validateSync } from 'class-validator';
 
-export class FindReturnDto<T> {
+export class FindReturnModelDto<T> {
     rows: T[];
     count: number;
 }
-export class FindDto<T> implements FindManyOptions {
+export class FindOptionsDto<T> implements FindManyOptions {
     @IsNumber()
     @IsOptional()
     @Type(() => Number)
@@ -31,11 +31,17 @@ export class FindDto<T> implements FindManyOptions {
     @ApiProperty({ required: false, description: 'Ordenação dos registros', default: { createdAt: 'DESC' } })
     order?: Record<string, 'ASC' | 'DESC'> = { createdAt: 'DESC' };
 
-    constructor(query: any) {
-        this.skip = query.skip ? Number(query.skip) : this.skip;
-        this.take = query.take ? Number(query.take) : this.take;
-        this.where = query.where ? JSON.parse(query.where) : {};
-        this.order = query.order ? JSON.parse(query.order) : this.order;
+    constructor(query: any = {}) {
+        this.skip = query?.skip ? Number(query.skip) : this.skip;
+        this.take = query?.take ? Number(query.take) : this.take;
+        this.order = query?.order ? JSON.parse(query.order) : this.order;
+
+        this.where = {}
+        Object.keys(query).map(key => {
+            if (!['skip', 'take', 'order'].includes(key)) {
+                this.where[key] = query[key]
+            }
+        })
 
         const errors = validateSync(this);
         if (errors.length > 0) {

@@ -1,5 +1,5 @@
-import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { CryptoCurrencyEntity } from './crypto-currency.entity';
+import { FindOptionsDto, FindReturnModelDto } from 'dto/find.dto';
 import { CryptoCurrencyService } from './crypto-currency.service';
 import { CreateCryptoCurrencyDto } from './dto/create-crypto-currency.dto';
 import { Controller, Post, Get, Patch, Delete, Body, Param, Req } from '@nestjs/common';
@@ -30,7 +30,7 @@ export class CryptoCurrencyController implements CryptoCurrencyControllerInterfa
     }
 
     @Get()
-    findAll(@Req() options: FindDto<CryptoCurrencyEntity>): Promise<FindReturnDto<CryptoCurrencyEntity>> {
+    findAll(@Req() options: FindOptionsDto<CryptoCurrencyEntity>): Promise<FindReturnModelDto<CryptoCurrencyEntity>> {
         return this.service.findAll(options);
     }
 }

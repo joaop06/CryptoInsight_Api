@@ -2,28 +2,15 @@ import { UserEntity } from './user.entity';
 import { UsersService } from './users.service';
 import { Public } from 'src/auth/jwt/jwt-auth-guard';
 import { CreateUserDto } from './dto/create-user.dto';
-import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { UpdateUserDto } from './dto/update-user.dts';
-import { UsersDocs } from './dto/users.documentation';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import { UserControllerInterface } from './interfaces/user.controller.interface';
-import { Controller, Get, Post, Delete, Param, Body, Patch, Req, HttpException, HttpStatus } from '@nestjs/common';
-
+import { UserReturnDto } from './dto/user-return.dto';
 import { Exception } from 'interceptors/exception.filter';
-
-import {
-    ApiBody,
-    ApiTags,
-    ApiParam,
-    ApiQuery,
-    ApiResponse,
-    ApiOperation,
-    ApiOkResponse,
-    ApiFoundResponse,
-    ApiCreatedResponse,
-    ApiNotFoundResponse,
-    ApiBadRequestResponse,
-} from '@nestjs/swagger';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { FindOptionsDto, FindReturnModelDto } from 'dto/find.dto';
+import { UserControllerInterface } from './interfaces/user.controller.interface';
+import { Controller, Get, Post, Delete, Param, Body, Patch, Query } from '@nestjs/common';
+import { CreateDoc, DeleteDoc, UpdateDoc, FindAllDoc, FindOneDoc, ChangePasswordDoc } from './dto/users.documentation';
+import { ApiBody, ApiTags, ApiParam, ApiQuery, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiConflictResponse, ApiNotFoundResponse, ApiBadRequestResponse } from '@nestjs/swagger';
 
 @ApiTags('users')
 @Controller('users')
@@ -31,67 +18,97 @@ export class UsersController implements UserControllerInterface {
     constructor(private readonly service: UsersService) { }
 
     @Delete(':id')
-    @ApiParam(UsersDocs.delete.param)
-    @ApiOperation(UsersDocs.delete.operation)
-    @ApiOkResponse(UsersDocs.delete.okResponse)
-    @ApiBadRequestResponse(UsersDocs.delete.badRequest)
-    delete(@Param('id') id: string): Promise<any> {
-        return this.service.delete(+id);
+    @ApiParam(DeleteDoc.param)
+    @ApiOperation(DeleteDoc.operation)
+    @ApiOkResponse(DeleteDoc.okResponse)
+    @ApiBadRequestResponse(DeleteDoc.badRequest)
+    async delete(@Param('id') id: string): Promise<any> {
+        try {
+            const result = await this.service.delete(+id);
+            return { message: 'Sucesso ao deletar', affected: result.affected };
+
+
+        } catch (error) {
+            const message = `Erro ao deletar: ${error.message}`;
+            new Exception({ ...error, message });
+        }
     }
 
     @Post('change-password')
-    @ApiBody(UsersDocs.changePassword.body)
-    @ApiOperation(UsersDocs.changePassword.operation)
-    @ApiOkResponse(UsersDocs.changePassword.okResponse)
-    @ApiBadRequestResponse(UsersDocs.changePassword.badRequest)
-    changePassword(@Body() object: ChangePasswordDto): Promise<any> {
-        return this.service.changePassword(object);
+    @ApiBody(ChangePasswordDoc.body)
+    @ApiOperation(ChangePasswordDoc.operation)
+    @ApiNotFoundResponse(ChangePasswordDoc.notFound)
+    @ApiCreatedResponse(ChangePasswordDoc.okResponse)
+    @ApiBadRequestResponse(ChangePasswordDoc.badRequest)
+    async changePassword(@Body() object: ChangePasswordDto): Promise<any> {
+        try {
+            await this.service.changePassword(object);
+            return { message: 'Sucesso ao atualizar senha' };
+
+        } catch (error) {
+            const message = `Erro ao atualizar senha: ${error.message}`;
+            new Exception({ ...error, message });
+        }
     }
 
     @Get(':id')
-    @ApiParam(UsersDocs.findOne.param)
-    @ApiOperation(UsersDocs.findOne.operation)
-    @ApiOkResponse(UsersDocs.findOne.okResponse)
-    @ApiNotFoundResponse(UsersDocs.findOne.notFound)
-    async findOne(@Param('id') id: string): Promise<UserEntity> {
+    @ApiParam(FindOneDoc.param)
+    @ApiOperation(FindOneDoc.operation)
+    @ApiOkResponse(FindOneDoc.okResponse)
+    @ApiNotFoundResponse(FindOneDoc.notFound)
+    async findOne(@Param('id') id: string): Promise<UserReturnDto> {
         try {
             return await this.service.findOne(+id);
 
         } catch (error) {
-            throw new Exception(error);
+            new Exception(error);
         }
     }
 
     @Post()
     @Public()
-    @ApiBody(UsersDocs.create.body)
-    @ApiOperation(UsersDocs.create.operation)
-    @ApiBadRequestResponse(UsersDocs.create.badRequest)
-    @ApiCreatedResponse(UsersDocs.create.createdResponse)
-    async create(@Body() object: CreateUserDto): Promise<UserEntity> {
+    @ApiBody(CreateDoc.body)
+    @ApiOperation(CreateDoc.operation)
+    @ApiConflictResponse(CreateDoc.conflict)
+    @ApiBadRequestResponse(CreateDoc.badRequest)
+    @ApiCreatedResponse(CreateDoc.createdResponse)
+    async create(@Body() object: CreateUserDto): Promise<UserReturnDto> {
         try {
             return await this.service.create(object);
 
         } catch (error) {
-            throw new Exception(error)
+            const message = `Erro ao inserir: ${error.message}`;
+            new Exception({ ...error, message });
         }
     }
 
     @Patch(':id')
-    @ApiParam(UsersDocs.update.param)
-    @ApiOperation(UsersDocs.update.operation)
-    @ApiOkResponse(UsersDocs.update.okResponse)
-    @ApiBadRequestResponse(UsersDocs.update.badRequest)
-    update(@Param('id') id: string, object: UpdateUserDto): Promise<any> {
-        return this.service.update(+id, object);
+    @ApiParam(UpdateDoc.param)
+    @ApiOperation(UpdateDoc.operation)
+    @ApiOkResponse(UpdateDoc.okResponse)
+    @ApiBadRequestResponse(UpdateDoc.badRequest)
+    async update(@Param('id') id: string, @Body() object: Partial<UpdateUserDto>): Promise<any> {
+        try {
+            const result = await this.service.update(+id, object);
+            return { message: 'Sucesso ao atualizar', affected: result.affected };
+
+        } catch (error) {
+            const message = `Erro ao atualizar: ${error.message}`;
+            new Exception({ ...error, message });
+        }
     }
 
     @Get()
-    @ApiQuery(UsersDocs.findAll.query)
-    @ApiOperation(UsersDocs.findAll.operation)
-    @ApiOkResponse(UsersDocs.findAll.okResponse)
-    @ApiBadRequestResponse(UsersDocs.findAll.badRequest)
-    findAll(@Req() options: FindDto<UserEntity>): Promise<FindReturnDto<UserEntity>> {
-        return this.service.findAll(options);
+    @ApiQuery(FindAllDoc.query)
+    @ApiOperation(FindAllDoc.operation)
+    @ApiOkResponse(FindAllDoc.okResponse)
+    @ApiBadRequestResponse(FindAllDoc.badRequest)
+    async findAll(@Query() options: FindOptionsDto<UserEntity>): Promise<FindReturnModelDto<UserReturnDto>> {
+        try {
+            return await this.service.findAll(options);
+
+        } catch (error) {
+            new Exception(error);
+        }
     }
 }

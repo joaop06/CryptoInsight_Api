@@ -1,14 +1,15 @@
 import * as bcrypt from 'bcrypt';
-import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { UpdateUserDto } from './dto/update-user.dts';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import { UsersServiceInterface } from './interfaces/user.service.interface';
+import { UserReturnDto } from './dto/user-return.dto';
+import { QueryFailedError, Repository } from 'typeorm';
 import { Exception } from 'interceptors/exception.filter';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { FindOptionsDto, FindReturnModelDto } from 'dto/find.dto';
+import { UsersServiceInterface } from './interfaces/user.service.interface';
 
 @Injectable()
 export class UsersService implements UsersServiceInterface {
@@ -27,28 +28,54 @@ export class UsersService implements UsersServiceInterface {
     }
 
     async delete(id: number): Promise<any> {
-        return await this.repository.softDelete(id);
+        const result = await this.repository.softDelete(id);
+
+        if (result.affected === 0) throw new Exception({ message: 'Usuário não encontrado' })
+
+        return result;
     }
 
     async findOne(id: number): Promise<UserEntity> {
+        /**
+         * *********** Ainda retornando Password ao buscar ***********
+         */
         const user = await this.repository.findOneBy({ id });
 
         if (user) return this.removePassword(user);
         else throw new Exception({ message: 'Usuário não encontrado', status: 404 });
     }
 
-    async create(object: CreateUserDto): Promise<UserEntity> {
-        const password = await bcrypt.hash(object.password, 10);
-        const user = await this.repository.save({ ...object, password });
+    async create(object: CreateUserDto): Promise<UserReturnDto> {
+        try {
+            /**
+             * *********** Ainda retornando Password ao criar ***********
+             */
+            const password = await bcrypt.hash(object.password, 10);
+            return await this.repository.save({ ...object, password });
 
-        return this.removePassword(user);
+        } catch (error) {
+            if (error instanceof QueryFailedError && error.message.includes("Duplicate entry")) {
+                // Personalizando a mensagem de erro para duplicidade de email
+                throw new Exception({ message: 'Este email já está em uso', status: 409 });
+
+            } else {
+                throw error; // Lançar outros erros que possam ocorrer
+            }
+        }
     }
 
     async update(id: number, object: UpdateUserDto): Promise<any> {
-        return await this.repository.update(id, object);
+        const result = await this.repository.update(id, object);
+
+        if (result.affected === 0) throw new Exception({ message: 'Usuário não encontrado' })
+
+        return result;
     }
 
-    async findAll(options: FindDto<UserEntity>): Promise<FindReturnDto<UserEntity>> {
+    async findAll(options: FindOptionsDto<UserEntity>): Promise<FindReturnModelDto<UserEntity>> {
+        /**
+         * *********** Ainda retornando Password ao buscar ***********
+         */
         const [rows, count] = await this.repository.findAndCount(options)
 
         return { rows, count };
@@ -57,9 +84,11 @@ export class UsersService implements UsersServiceInterface {
     async changePassword(object: ChangePasswordDto): Promise<any> {
         const { userId } = object;
         const user = await this.repository.findOneBy({ id: userId });
+        if (!user) throw new Exception({ message: 'Usuário não encontrado', status: 404 });
+
 
         const passwordMatch = await bcrypt.compare(object.oldPassword, user.password);
-        if (!passwordMatch) throw new Error('Invalid old password');
+        if (!passwordMatch) throw new Error('Senha antiga inválida');
 
         const newHashedPassword = await bcrypt.hash(object.newPassword, 10);
         return await this.repository.update(userId, { password: newHashedPassword });

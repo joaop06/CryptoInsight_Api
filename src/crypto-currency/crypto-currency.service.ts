@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { CryptoCurrencyEntity } from './crypto-currency.entity';
+import { FindOptionsDto, FindReturnModelDto } from 'dto/find.dto';
 import { CreateCryptoCurrencyDto } from './dto/create-crypto-currency.dto';
 import { CryptoCurrencyServiceInterface } from './interfaces/crypto-currency.service.interface';
 
@@ -29,7 +29,7 @@ export class CryptoCurrencyService implements CryptoCurrencyServiceInterface {
         return await this.repository.update(id, object);
     }
 
-    async findAll(options: FindDto<CryptoCurrencyEntity>): Promise<FindReturnDto<CryptoCurrencyEntity>> {
+    async findAll(options: FindOptionsDto<CryptoCurrencyEntity>): Promise<FindReturnModelDto<CryptoCurrencyEntity>> {
         const [rows, count] = await this.repository.findAndCount(options);
         return { rows, count };
     }

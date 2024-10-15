@@ -18,7 +18,6 @@ export class AuthController {
 
             if (!user) new Exception({ message: 'Credenciais inválidas', statusCode: 401 });
 
-
             return await this.authService.login(user);
 
         } catch (error) {

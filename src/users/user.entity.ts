@@ -9,7 +9,8 @@ import {
     UpdateDateColumn,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-// import moment from 'moment-timezone';
+import moment from 'moment-timezone';
+import { Moment } from 'moment-timezone';
 import { InvestmentsEntity } from 'src/investments/investments.entity';
 
 @Entity('users')
@@ -31,23 +32,23 @@ export class UserEntity {
     investment: InvestmentsEntity;
 
     @CreateDateColumn()
-    createdAt: Date;
+    createdAt: Date | string | Moment;
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updatedAt: Date | string | Moment;
 
     @DeleteDateColumn()
-    deletedAt: Date;
+    deletedAt: Date | string | Moment;
 
-    // @BeforeInsert()
-    // @BeforeUpdate()
-    // protected adjustDates?(): void {
-    //     const timezone = "America/Sao_Paulo";
-    //     if (this.createdAt) {
-    //         this.createdAt = moment(this.createdAt).tz(timezone).toDate();
-    //     }
-    //     if (this.updatedAt) {
-    //         this.updatedAt = moment(this.updatedAt).tz(timezone).toDate();
-    //     }
-    // }
+    @BeforeInsert()
+    @BeforeUpdate()
+    protected adjustDates?(): void {
+        const timezone = "America/Sao_Paulo";
+        if (this.createdAt) {
+            this.createdAt = moment(this.createdAt).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
+        }
+        if (this.updatedAt) {
+            this.updatedAt = moment(this.updatedAt).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
+        }
+    }
 }
