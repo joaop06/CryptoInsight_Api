@@ -2,8 +2,8 @@ import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { Public } from './jwt/jwt-auth-guard';
 import { Post, Body, Controller } from '@nestjs/common';
+import { Exception } from 'interceptors/exception.filter';
 import { ValidatedLoginDto } from './dto/validated-login.dto';
-
 
 
 @Controller('auth')
@@ -13,12 +13,16 @@ export class AuthController {
     @Public()
     @Post('login')
     async login(@Body() object: LoginDto): Promise<ValidatedLoginDto> {
-        const user = await this.authService.validateUser(object);
+        try {
+            const user = await this.authService.validateUser(object);
 
-        if (!user) {
-            return { message: 'Invalid credentials' };
+            if (!user) new Exception({ message: 'Credenciais inválidas', statusCode: 401 });
+
+
+            return await this.authService.login(user);
+
+        } catch (error) {
+            new Exception(error);
         }
-
-        return await this.authService.login(user);
     }
 }

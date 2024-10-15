@@ -2,11 +2,14 @@ import {
     Entity,
     Column,
     OneToOne,
+    BeforeInsert,
+    BeforeUpdate,
     CreateDateColumn,
     DeleteDateColumn,
     UpdateDateColumn,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+// import moment from 'moment-timezone';
 import { InvestmentsEntity } from 'src/investments/investments.entity';
 
 @Entity('users')
@@ -35,4 +38,16 @@ export class UserEntity {
 
     @DeleteDateColumn()
     deletedAt: Date;
+
+    // @BeforeInsert()
+    // @BeforeUpdate()
+    // protected adjustDates?(): void {
+    //     const timezone = "America/Sao_Paulo";
+    //     if (this.createdAt) {
+    //         this.createdAt = moment(this.createdAt).tz(timezone).toDate();
+    //     }
+    //     if (this.updatedAt) {
+    //         this.updatedAt = moment(this.updatedAt).tz(timezone).toDate();
+    //     }
+    // }
 }

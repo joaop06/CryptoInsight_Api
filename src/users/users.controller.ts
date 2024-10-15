@@ -9,7 +9,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserControllerInterface } from './interfaces/user.controller.interface';
 import { Controller, Get, Post, Delete, Param, Body, Patch, Req, HttpException, HttpStatus } from '@nestjs/common';
 
-
+import { Exception } from 'interceptors/exception.filter';
 
 import {
     ApiBody,
@@ -24,7 +24,6 @@ import {
     ApiNotFoundResponse,
     ApiBadRequestResponse,
 } from '@nestjs/swagger';
-import { NextFunction } from 'express';
 
 @ApiTags('users')
 @Controller('users')
@@ -54,8 +53,13 @@ export class UsersController implements UserControllerInterface {
     @ApiOperation(UsersDocs.findOne.operation)
     @ApiOkResponse(UsersDocs.findOne.okResponse)
     @ApiNotFoundResponse(UsersDocs.findOne.notFound)
-    findOne(@Param('id') id: string): Promise<UserEntity> {
-        return this.service.findOne(+id);
+    async findOne(@Param('id') id: string): Promise<UserEntity> {
+        try {
+            return await this.service.findOne(+id);
+
+        } catch (error) {
+            throw new Exception(error);
+        }
     }
 
     @Post()
@@ -68,8 +72,8 @@ export class UsersController implements UserControllerInterface {
         try {
             return await this.service.create(object);
 
-        } catch (e) {
-            throw new HttpException({ message: 'Erro ao inserir', error: e.message }, HttpStatus.BAD_REQUEST)
+        } catch (error) {
+            throw new Exception(error)
         }
     }
 

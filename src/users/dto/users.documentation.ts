@@ -38,7 +38,7 @@ export class UsersDocs {
         operation: { summary: 'Inserir usuário' },
         body: { required: true, type: CreateUserDto },
         createdResponse: { example: this.userExample },
-        badRequest: { example: { error: 'string', message: 'Erro ao inserir' } },
+        badRequest: { example: { statusCode: 400, error: 'string', message: 'Erro ao inserir' } },
     }
 
     static update = {

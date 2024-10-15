@@ -8,6 +8,7 @@ import { FindDto, FindReturnDto } from 'dto/find.dto';
 import { UpdateUserDto } from './dto/update-user.dts';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UsersServiceInterface } from './interfaces/user.service.interface';
+import { Exception } from 'interceptors/exception.filter';
 
 @Injectable()
 export class UsersService implements UsersServiceInterface {
@@ -17,7 +18,8 @@ export class UsersService implements UsersServiceInterface {
     ) { }
 
     removePassword(user: UserEntity) {
-        return { ...user, password: undefined };
+        delete user?.password;
+        return user;
     }
 
     async findOneByEmail(email: string): Promise<UserEntity> {
@@ -31,7 +33,8 @@ export class UsersService implements UsersServiceInterface {
     async findOne(id: number): Promise<UserEntity> {
         const user = await this.repository.findOneBy({ id });
 
-        return this.removePassword(user);
+        if (user) return this.removePassword(user);
+        else throw new Exception({ message: 'Usuário não encontrado', status: 404 });
     }
 
     async create(object: CreateUserDto): Promise<UserEntity> {
