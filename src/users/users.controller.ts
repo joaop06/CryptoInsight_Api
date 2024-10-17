@@ -27,7 +27,6 @@ export class UsersController implements UserControllerInterface {
             const result = await this.service.delete(+id);
             return { message: 'Sucesso ao deletar', affected: result.affected };
 
-
         } catch (error) {
             const message = `Erro ao deletar: ${error.message}`;
             new Exception({ ...error, message });

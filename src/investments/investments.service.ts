@@ -5,6 +5,7 @@ import { InvestmentsEntity } from './investments.entity';
 import { CreateInvestmentDto } from './dto/create-investment.dto';
 import { FindOptionsDto, FindReturnModelDto } from 'dto/find.dto';
 import { InvestmentsServiceInterface } from './interfaces/investments.service.interface';
+import { Exception } from 'interceptors/exception.filter';
 
 @Injectable()
 export class InvestmentsService implements InvestmentsServiceInterface {
@@ -14,11 +15,18 @@ export class InvestmentsService implements InvestmentsServiceInterface {
     ) { }
 
     async delete(id: number): Promise<any> {
-        return await this.repository.softDelete(id);
+        const result = await this.repository.softDelete(id);
+
+        if (result.affected === 0) throw new Exception({ message: 'Investimento não encontrado' })
+
+        return result;
     }
 
     async findOne(id: number): Promise<InvestmentsEntity> {
-        return await this.repository.findOneBy({ id });
+        const investment = await this.repository.findOneBy({ id });
+
+        if (investment) return investment;
+        else throw new Exception({ message: 'Investimento não encontrado', status: 404 });
     }
 
     async create(object: CreateInvestmentDto): Promise<InvestmentsEntity> {
@@ -32,7 +40,11 @@ export class InvestmentsService implements InvestmentsServiceInterface {
     }
 
     async update(id: number, object: Partial<InvestmentsEntity>): Promise<any> {
-        return await this.repository.update(id, object);
+        const result = await this.repository.update(id, object);
+
+        if (result.affected === 0) throw new Exception({ message: 'Investimento não encontrado' })
+
+        return result;
     }
 
 }
