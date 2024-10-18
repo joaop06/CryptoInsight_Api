@@ -1,21 +1,19 @@
-import { UserEntity } from './user.entity';
-import { UsersService } from './users.service';
-import { Public } from 'src/auth/jwt/jwt-auth-guard';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dts';
-import { UserReturnDto } from './dto/user-return.dto';
+import { InvestmentsEntity } from './investments.entity';
 import { Exception } from 'interceptors/exception.filter';
-import { ChangePasswordDto } from './dto/change-password.dto';
+import { InvestmentsService } from './investments.service';
+import { CreateInvestmentDto } from './dto/create-investment.dto';
 import { FindOptionsDto, FindReturnModelDto } from 'dto/find.dto';
-import { UserControllerInterface } from './interfaces/user.controller.interface';
-import { Controller, Get, Post, Delete, Param, Body, Patch, Query } from '@nestjs/common';
-import { CreateDoc, DeleteDoc, UpdateDoc, FindAllDoc, FindOneDoc, ChangePasswordDoc } from './dto/users.documentation';
-import { ApiBody, ApiTags, ApiParam, ApiQuery, ApiOperation, ApiOkResponse, ApiCreatedResponse, ApiConflictResponse, ApiNotFoundResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { Controller, Delete, Get, Patch, Post, Param, Body, Query } from '@nestjs/common';
+import { InvestmentsControllerInterface } from './interfaces/investments.controller.interface';
+import { CreateDoc, DeleteDoc, FindAllDoc, FindOneDoc, UpdateDoc } from './dto/investments.documentation';
+import { ApiBadRequestResponse, ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('users')
-@Controller('users')
-export class UsersController implements UserControllerInterface {
-    constructor(private readonly service: UsersService) { }
+@ApiTags('investments')
+@Controller('investments')
+export class InvestmentsController implements InvestmentsControllerInterface {
+    constructor(
+        private readonly service: InvestmentsService
+    ) { }
 
     @Delete(':id')
     @ApiParam(DeleteDoc.param)
@@ -33,29 +31,12 @@ export class UsersController implements UserControllerInterface {
         }
     }
 
-    @Post('change-password')
-    @ApiBody(ChangePasswordDoc.body)
-    @ApiOperation(ChangePasswordDoc.operation)
-    @ApiNotFoundResponse(ChangePasswordDoc.notFound)
-    @ApiCreatedResponse(ChangePasswordDoc.okResponse)
-    @ApiBadRequestResponse(ChangePasswordDoc.badRequest)
-    async changePassword(@Body() object: ChangePasswordDto): Promise<any> {
-        try {
-            await this.service.changePassword(object);
-            return { message: 'Sucesso ao atualizar senha' };
-
-        } catch (error) {
-            const message = `Erro ao atualizar senha: ${error.message}`;
-            new Exception({ ...error, message });
-        }
-    }
-
     @Get(':id')
     @ApiParam(FindOneDoc.param)
     @ApiOperation(FindOneDoc.operation)
     @ApiOkResponse(FindOneDoc.okResponse)
     @ApiNotFoundResponse(FindOneDoc.notFound)
-    async findOne(@Param('id') id: string): Promise<UserReturnDto> {
+    async findOne(@Param('id') id: string): Promise<InvestmentsEntity> {
         try {
             return await this.service.findOne(+id);
 
@@ -65,13 +46,12 @@ export class UsersController implements UserControllerInterface {
     }
 
     @Post()
-    @Public()
     @ApiBody(CreateDoc.body)
     @ApiOperation(CreateDoc.operation)
     @ApiConflictResponse(CreateDoc.conflict)
     @ApiBadRequestResponse(CreateDoc.badRequest)
     @ApiCreatedResponse(CreateDoc.createdResponse)
-    async create(@Body() object: CreateUserDto): Promise<UserReturnDto> {
+    async create(@Body() object: CreateInvestmentDto): Promise<InvestmentsEntity> {
         try {
             return await this.service.create(object);
 
@@ -86,7 +66,7 @@ export class UsersController implements UserControllerInterface {
     @ApiOperation(UpdateDoc.operation)
     @ApiOkResponse(UpdateDoc.okResponse)
     @ApiBadRequestResponse(UpdateDoc.badRequest)
-    async update(@Param('id') id: string, @Body() object: Partial<UpdateUserDto>): Promise<any> {
+    async update(@Param('id') id: string, @Body() object: Partial<InvestmentsEntity>): Promise<any> {
         try {
             const result = await this.service.update(+id, object);
             return { message: 'Sucesso ao atualizar', affected: result.affected };
@@ -102,7 +82,7 @@ export class UsersController implements UserControllerInterface {
     @ApiOperation(FindAllDoc.operation)
     @ApiOkResponse(FindAllDoc.okResponse)
     @ApiBadRequestResponse(FindAllDoc.badRequest)
-    async findAll(@Query() options: FindOptionsDto<UserEntity>): Promise<FindReturnModelDto<UserReturnDto>> {
+    async findAll(@Query() options: FindOptionsDto<InvestmentsEntity>): Promise<FindReturnModelDto<InvestmentsEntity>> {
         try {
             return await this.service.findAll(options);
 
