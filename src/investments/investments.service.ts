@@ -23,7 +23,17 @@ export class InvestmentsService implements InvestmentsServiceInterface {
     }
 
     async findOne(id: number): Promise<InvestmentsEntity> {
-        const investment = await this.repository.findOneBy({ id });
+        const investment = await this.repository.findOne({
+            where: { id },
+            relations: ['user'], // Faz o JOIN com a entidade UserEntity
+            select: {
+                user: {
+                    id: true,
+                    name: true,
+                    email: true
+                }
+            }
+        });
 
         if (investment) return investment;
         else throw new Exception({ message: 'Investimento não encontrado', status: 404 });

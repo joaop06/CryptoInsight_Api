@@ -5,7 +5,9 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
     PrimaryGeneratedColumn,
+    OneToMany,
 } from 'typeorm';
+import { InvestmentsEntity } from 'src/investments/investments.entity';
 
 @Entity('crypto_currency')
 export class CryptoCurrencyEntity {
@@ -26,6 +28,9 @@ export class CryptoCurrencyEntity {
 
     @Column()
     circulatingSupply: number;
+
+    @OneToMany(() => InvestmentsEntity, (investment) => investment.crypto)
+    investments: InvestmentsEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

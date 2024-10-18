@@ -1,7 +1,7 @@
 import {
     Entity,
     Column,
-    OneToOne,
+    OneToMany,
     BeforeInsert,
     BeforeUpdate,
     CreateDateColumn,
@@ -28,16 +28,16 @@ export class UserEntity {
     password: string;
 
     // Define relacionamento OneToOne com Investments
-    @OneToOne(() => InvestmentsEntity, (investment) => investment.user)
-    investment: InvestmentsEntity;
+    @OneToMany(() => InvestmentsEntity, (investment) => investment.user)
+    investments: InvestmentsEntity[];
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date | string | Moment;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: 'timestamp' })
     updatedAt: Date | string | Moment;
 
-    @DeleteDateColumn()
+    @DeleteDateColumn({ type: 'timestamp' })
     deletedAt: Date | string | Moment;
 
     @BeforeInsert()

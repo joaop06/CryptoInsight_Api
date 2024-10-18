@@ -6,6 +6,10 @@ export class CreateInvestmentDto {
     userId: number;
 
     @IsNumber()
+    @IsNotEmpty({ message: 'Criptomoeda não informada' })
+    cryptoId: number;
+
+    @IsNumber()
     @IsNotEmpty({ message: 'Valor de investimento não informado' })
     value: number;
 

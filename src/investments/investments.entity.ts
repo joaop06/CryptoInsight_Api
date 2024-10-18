@@ -1,7 +1,7 @@
 import {
     Entity,
     Column,
-    OneToOne,
+    ManyToOne,
     JoinColumn,
     CreateDateColumn,
     DeleteDateColumn,
@@ -9,6 +9,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from 'src/users/user.entity';
+import { CryptoCurrencyEntity } from 'src/crypto-currency/crypto-currency.entity';
 
 @Entity('investments')
 export class InvestmentsEntity {
@@ -21,17 +22,24 @@ export class InvestmentsEntity {
     @Column()
     symbol: string;
 
-    // Define relacionamento OneToOne com User
-    @OneToOne(() => UserEntity, (user) => user.investment, { onDelete: 'CASCADE' })
+    @Column()
+    userId: number;
+
+    @ManyToOne(() => CryptoCurrencyEntity, (cryptoCurrency) => cryptoCurrency.investments)
+    @JoinColumn({ name: 'cryptoId' })
+    crypto: CryptoCurrencyEntity
+
+    // Define relacionamento ManyToOne com User
+    @ManyToOne(() => UserEntity, (user) => user.investments, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userId' }) // Define o nome da chave estrangeira
     user: UserEntity;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: 'timestamp' })
     updatedAt: Date;
 
-    @DeleteDateColumn()
+    @DeleteDateColumn({ type: 'timestamp' })
     deletedAt: Date;
 }
