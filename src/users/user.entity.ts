@@ -10,7 +10,6 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import moment from 'moment-timezone';
-import { Moment } from 'moment-timezone';
 import { InvestmentsEntity } from 'src/investments/investments.entity';
 
 @Entity('users')
@@ -32,13 +31,13 @@ export class UserEntity {
     investments: InvestmentsEntity[];
 
     @CreateDateColumn({ type: 'timestamp' })
-    createdAt: Date | string | Moment;
+    createdAt: Date | string;
 
     @UpdateDateColumn({ type: 'timestamp' })
-    updatedAt: Date | string | Moment;
+    updatedAt: Date | string;
 
     @DeleteDateColumn({ type: 'timestamp' })
-    deletedAt: Date | string | Moment;
+    deletedAt: Date | string;
 
     @BeforeInsert()
     @BeforeUpdate()

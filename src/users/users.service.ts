@@ -39,7 +39,7 @@ export class UsersService implements UsersServiceInterface {
         /**
          * *********** Ainda retornando Password ao buscar ***********
          */
-        const user = await this.repository.findOneBy({ id });
+        const user = await this.repository.findOne({ where: { id } });
 
         if (user) return this.removePassword(user);
         else throw new Exception({ message: 'Usuário não encontrado', status: 404 });
@@ -76,7 +76,11 @@ export class UsersService implements UsersServiceInterface {
         /**
          * *********** Ainda retornando Password ao buscar ***********
          */
-        const [rows, count] = await this.repository.findAndCount(options)
+        const [rows, count] = await this.repository.findAndCount({
+            ...options,
+            select: ['id', 'name', 'email', 'investments', 'createdAt', 'updatedAt', 'deletedAt']
+
+        })
 
         return { rows, count };
     }

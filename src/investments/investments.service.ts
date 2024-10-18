@@ -25,12 +25,19 @@ export class InvestmentsService implements InvestmentsServiceInterface {
     async findOne(id: number): Promise<InvestmentsEntity> {
         const investment = await this.repository.findOne({
             where: { id },
-            relations: ['user'], // Faz o JOIN com a entidade UserEntity
+            relations: ['user', 'crypto'], // Faz o JOIN com a entidade UserEntity
             select: {
                 user: {
                     id: true,
+                    name: true
+                },
+                crypto: {
+                    id: true,
                     name: true,
-                    email: true
+                    symbol: true,
+                    price: true,
+                    marketCap: true,
+                    circulatingSupply: true
                 }
             }
         });

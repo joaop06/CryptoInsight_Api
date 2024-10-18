@@ -2,7 +2,15 @@ import { FindOptionsDto } from "dto/find.dto";
 import { CreateCryptoCurrencyDto } from "./create-crypto-currency.dto";
 
 const Crypt = {
-
+    id: 1,
+    price: 63000,
+    symbol: 'BTC',
+    name: 'Bitcoin',
+    marketCap: null,
+    circulatingSupply: 20000000.00,
+    createdAt: '2024-10-18T03:49:55.990Z',
+    updatedAt: '2024-10-18T03:49:55.990Z',
+    deletedAt: null
 }
 
 export class DeleteDoc {

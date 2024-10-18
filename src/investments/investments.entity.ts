@@ -25,6 +25,9 @@ export class InvestmentsEntity {
     @Column()
     userId: number;
 
+    @Column()
+    cryptoId: number;
+
     @ManyToOne(() => CryptoCurrencyEntity, (cryptoCurrency) => cryptoCurrency.investments)
     @JoinColumn({ name: 'cryptoId' })
     crypto: CryptoCurrencyEntity
@@ -35,11 +38,11 @@ export class InvestmentsEntity {
     user: UserEntity;
 
     @CreateDateColumn({ type: 'timestamp' })
-    createdAt: Date;
+    createdAt: Date | string;
 
     @UpdateDateColumn({ type: 'timestamp' })
-    updatedAt: Date;
+    updatedAt: Date | string;
 
     @DeleteDateColumn({ type: 'timestamp' })
-    deletedAt: Date;
+    deletedAt: Date | string;
 }

@@ -3,11 +3,12 @@ import { CreateInvestmentDto } from "./create-investment.dto";
 
 const Investment = {
     id: 1,
-    userId: 45,
-    value: 63000,
+    userId: 38,
+    value: 2010,
+    cryptoId: 1,
     symbol: "BTC",
-    createdAt: "2024-10-17T01:08:00.667Z",
-    updatedAt: "2024-10-17T01:08:00.667Z",
+    createdAt: "2024-10-18T04:04:04.570Z",
+    updatedAt: "2024-10-18T04:04:04.570Z",
     deletedAt: null
 }
 

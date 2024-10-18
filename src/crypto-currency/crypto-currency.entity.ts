@@ -23,21 +23,21 @@ export class CryptoCurrencyEntity {
     @Column()
     price: number;
 
-    @Column()
-    marketCap: number;
+    @Column({ default: null })
+    marketCap?: number;
 
-    @Column()
-    circulatingSupply: number;
+    @Column({ default: null })
+    circulatingSupply?: number;
 
     @OneToMany(() => InvestmentsEntity, (investment) => investment.crypto)
     investments: InvestmentsEntity[];
 
     @CreateDateColumn()
-    createdAt: Date;
+    createdAt: Date | string;
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updatedAt: Date | string;
 
     @DeleteDateColumn()
-    deletedAt: Date;
+    deletedAt: Date | string;
 }

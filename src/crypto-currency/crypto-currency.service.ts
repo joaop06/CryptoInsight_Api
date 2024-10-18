@@ -22,7 +22,7 @@ export class CryptoCurrencyService implements CryptoCurrencyServiceInterface {
     }
 
     async create(object: CreateCryptoCurrencyDto): Promise<CryptoCurrencyEntity> {
-        return this.repository.create(object);
+        return this.repository.save(object);
     }
 
     async update(id: number, object: Partial<CryptoCurrencyEntity>): Promise<any> {
