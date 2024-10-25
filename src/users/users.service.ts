@@ -3,7 +3,7 @@ import { UserEntity } from './user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dts';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserReturnDto } from './dto/user-return.dto';
 import { QueryFailedError, Repository } from 'typeorm';
 import { Exception } from 'interceptors/exception.filter';

@@ -18,16 +18,25 @@ export class CryptoCurrencyEntity {
     name: string;
 
     @Column()
-    symbol: string;
+    date: Date;
+
+    @Column('float')
+    open: number;
+
+    @Column('float')
+    high: number;
+
+    @Column('float')
+    low: number;
+
+    @Column('float')
+    close: number;
+
+    @Column('bigint')
+    volume: number;
 
     @Column()
-    price: number;
-
-    @Column({ default: null })
-    marketCap?: number;
-
-    @Column({ default: null })
-    circulatingSupply?: number;
+    currency: string;
 
     @OneToMany(() => InvestmentsEntity, (investment) => investment.crypto)
     investments: InvestmentsEntity[];

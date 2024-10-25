@@ -2,7 +2,7 @@ import { UserEntity } from './user.entity';
 import { UsersService } from './users.service';
 import { Public } from 'src/auth/jwt/jwt-auth-guard';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dts';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserReturnDto } from './dto/user-return.dto';
 import { Exception } from 'interceptors/exception.filter';
 import { ChangePasswordDto } from './dto/change-password.dto';
