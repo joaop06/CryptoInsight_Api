@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { CryptoCurrencyEntity } from './crypto-currency.entity';
 import { FindOptionsDto, FindReturnModelDto } from 'dto/find.dto';
+import { CryptoRiskService } from 'src/crypto-risk/crypto-risk.service';
 import { CreateCryptoCurrencyDto } from './dto/create-crypto-currency.dto';
 import { CryptoCurrencyServiceInterface } from './interfaces/crypto-currency.service.interface';
 
@@ -17,15 +18,15 @@ import * as csvParser from 'csv-parser';
 export class CryptoCurrencyService implements CryptoCurrencyServiceInterface, OnModuleInit {
     constructor(
         @InjectRepository(CryptoCurrencyEntity)
-        private repository: Repository<CryptoCurrencyEntity>
+        private repository: Repository<CryptoCurrencyEntity>,
     ) { }
 
     async onModuleInit() {
         // Chama a função de leitura dos arquivos CSV ao iniciar o módulo
-        await this.loadAndProcessCsvFiles();
+        // await this.loadAndProcessCsvFiles();
 
         // Chama a função de treinamento do modelo ao iniciar o módulo
-        await this.trainModelOnStartup();
+        // await this.trainModelOnStartup();
     }
 
     async loadAndProcessCsvFiles() {

@@ -38,6 +38,9 @@ export class CryptoCurrencyEntity {
     @Column()
     currency: string;
 
+    @Column()
+    risk: string;
+
     @OneToMany(() => InvestmentsEntity, (investment) => investment.crypto)
     investments: InvestmentsEntity[];
 
