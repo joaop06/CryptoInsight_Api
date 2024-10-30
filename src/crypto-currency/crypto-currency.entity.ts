@@ -11,6 +11,10 @@ import { InvestmentsEntity } from 'src/investments/investments.entity';
 
 @Entity('crypto_currency')
 export class CryptoCurrencyEntity {
+    constructor(object?: Partial<CryptoCurrencyEntity>) {
+        Object.assign(this, object)
+    }
+
     @PrimaryGeneratedColumn()
     id: number;
 

@@ -3,8 +3,8 @@ import { getReasonPhrase } from "http-status-codes";
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from "@nestjs/common";
 
 export class Exception {
-    constructor(options?: Error | HttpException | any) {
-        const message = options?.message;
+    constructor(options?: Error | HttpException | string | any) {
+        const message = typeof options === 'string' ? options : options?.message;
         const status = options?.status || options?.statusCode || HttpStatus.BAD_REQUEST;
         const error = options?.response?.error || options?.name || getReasonPhrase(status);
 

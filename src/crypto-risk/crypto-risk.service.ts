@@ -3,6 +3,7 @@ import * as tf from '@tensorflow/tfjs';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { CryptoCurrencyEntity } from 'src/crypto-currency/crypto-currency.entity';
 import { CryptoCurrencyService } from 'src/crypto-currency/crypto-currency.service';
+import { Exception } from 'interceptors/exception.filter';
 
 @Injectable()
 export class CryptoRiskService implements OnModuleInit {
@@ -90,28 +91,16 @@ export class CryptoRiskService implements OnModuleInit {
 
     async classifyRisk(cryptos: CryptoCurrencyEntity[]): Promise<void> {
         let log: string;
-        const model = CryptoRiskService.trainedModelCryptoRisk;
+        const totalLength = cryptos.length;
 
-        await new Promise<void>(resolve => {
-            const totalLength = cryptos.length;
-
-            cryptos.forEach(async (crypto, i) => {
-                const processedData = tf.tensor2d([this.preprocessData(crypto)]);;
-
-                const prediction = model.predict(processedData) as tf.Tensor;
-                const result = Math.max(...prediction.dataSync());
-
-                let risk: string;
-
-                if (result < 0.65) risk = 'Baixo';
-                else if (result >= 0.65 && result <= 0.85) risk = 'Médio';
-                else risk = 'Alto';
-
-                await this.cryptoCurrencyService.update(crypto.id, { ...crypto, risk });
-
+        cryptos.forEach(async (crypto, i) => {
+            try {
+                if (!crypto.risk || true) {
+                    const risk = await this.getRiskClassification(crypto);
+                    await this.cryptoCurrencyService.update(crypto.id, { ...crypto, risk });
+                }
 
                 // Log a cada 10% de conclusão
-
                 const progressPercentage = Math.floor((i + 1) / totalLength * 100);
                 if (progressPercentage % 10 === 0) {
                     const newLog = `Progresso do Treinamento: ${progressPercentage}%`
@@ -120,9 +109,32 @@ export class CryptoRiskService implements OnModuleInit {
                         console.log(log);
                     }
                 };
-            });
 
-            resolve();
-        })
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    }
+
+    async getRiskClassification(crypto: CryptoCurrencyEntity): Promise<string> {
+        try {
+            const model = CryptoRiskService.trainedModelCryptoRisk;
+
+            const processedData = tf.tensor2d([this.preprocessData(crypto)]);;
+
+            const prediction = model.predict(processedData) as tf.Tensor;
+            const result = Math.max(...prediction.dataSync());
+
+            let risk: string;
+
+            if (result < 0.65) risk = 'Baixo';
+            else if (result >= 0.65 && result <= 0.85) risk = 'Médio';
+            else risk = 'Alto';
+
+            return risk;
+
+        } catch (e) {
+            new Exception('Erro ao classificar o risco do ativo');
+        }
     }
 }

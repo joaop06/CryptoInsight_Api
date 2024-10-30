@@ -1,4 +1,23 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Query } from '@nestjs/common';
+import { CryptoRiskService } from './crypto-risk.service';
+import { RiskClassificationDto } from './dto/risk-classification.dto';
+import { RiskClassificationDoc } from './dto/crypto-risk.documentation';
+import { CryptoCurrencyEntity } from 'src/crypto-currency/crypto-currency.entity';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('crypto-risk')
 @Controller('crypto-risk')
-export class CryptoRiskController { }
+export class CryptoRiskController {
+    constructor(private readonly service: CryptoRiskService) { }
+
+    @Get()
+    @ApiOperation(RiskClassificationDoc.operation)
+    @ApiOkResponse(RiskClassificationDoc.okResponse)
+    @ApiBadRequestResponse(RiskClassificationDoc.badRequest)
+    async getRiskClassification(@Body() object: RiskClassificationDto): Promise<object> {
+        const crypto = new CryptoCurrencyEntity(object);
+        const risk = await this.service.getRiskClassification(crypto);
+
+        return { risk };
+    }
+}
