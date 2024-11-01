@@ -31,10 +31,7 @@ export class CryptoRiskService implements OnModuleInit {
             return [0, 0, 1];
         });
 
-        await this.trainModel(data, labels);
-        console.log('Modelo Treinado com sucesso!!');
-
-        await this.classifyRisk(cryptos);
+        this.trainModel(data, labels, cryptos);
     }
 
     preprocessDataset(cryptos: CryptoCurrencyEntity[]): number[][] {
@@ -56,7 +53,7 @@ export class CryptoRiskService implements OnModuleInit {
         return [volumeNormalized, openNormalized, closeNormalized, volatilityNormalized];
     }
 
-    async trainModel(data: number[][], labels: number[][]): Promise<tf.LayersModel> {
+    async trainModel(data: number[][], labels: number[][], cryptos: CryptoCurrencyEntity[]): Promise<void> {
         const model = tf.sequential();
         /**
            * Definir as camadas do modelo
@@ -86,16 +83,18 @@ export class CryptoRiskService implements OnModuleInit {
 
 
         CryptoRiskService.trainedModelCryptoRisk = model;
-        return model;
+        console.log('Modelo Treinado com sucesso!!');
+
+        await this.classifyRisk(cryptos);
     }
 
     async classifyRisk(cryptos: CryptoCurrencyEntity[]): Promise<void> {
         let log: string;
         const totalLength = cryptos.length;
 
-        cryptos.forEach(async (crypto, i) => {
+        await Promise.all(cryptos.map(async (crypto, i) => {
             try {
-                if (!crypto.risk || true) {
+                if (!crypto.name || process.env.ENABLE_RISK_MODEL_TRAINING === 'true') {
                     const risk = await this.getRiskClassification(crypto);
                     await this.cryptoCurrencyService.update(crypto.id, { ...crypto, risk });
                 }
@@ -103,7 +102,7 @@ export class CryptoRiskService implements OnModuleInit {
                 // Log a cada 10% de conclusão
                 const progressPercentage = Math.floor((i + 1) / totalLength * 100);
                 if (progressPercentage % 10 === 0) {
-                    const newLog = `Progresso do Treinamento: ${progressPercentage}%`
+                    const newLog = `Classificação de Risco: ${progressPercentage}%`
                     if (newLog != log) {
                         log = newLog;
                         console.log(log);
@@ -113,12 +112,19 @@ export class CryptoRiskService implements OnModuleInit {
             } catch (e) {
                 console.error(e);
             }
-        });
+        }));
+
+        console.log('Classificação de Risco concluída!');
     }
 
     async getRiskClassification(crypto: CryptoCurrencyEntity): Promise<string> {
         try {
             const model = CryptoRiskService.trainedModelCryptoRisk;
+
+            if (!model) {
+                const errorMessage = 'Modelo de Classificação de Risco ainda não está treinado';
+                throw Object.assign(new Error(), { errorMessage });
+            }
 
             const processedData = tf.tensor2d([this.preprocessData(crypto)]);;
 
@@ -127,14 +133,14 @@ export class CryptoRiskService implements OnModuleInit {
 
             let risk: string;
 
-            if (result < 0.65) risk = 'Baixo';
-            else if (result >= 0.65 && result <= 0.85) risk = 'Médio';
+            if (result < 0.82) risk = 'Baixo';
+            else if (result >= 0.82 && result <= 0.95) risk = 'Médio';
             else risk = 'Alto';
 
             return risk;
 
         } catch (e) {
-            new Exception('Erro ao classificar o risco do ativo');
+            new Exception(e.errorMessage || 'Erro ao classificar o risco do ativo');
         }
     }
 }
