@@ -12,6 +12,7 @@ import { CryptoCurrencyModule } from './crypto-currency/crypto-currency.module';
 
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { CryptoRiskModule } from './crypto-risk/crypto-risk.module';
 
 
 @Module({
@@ -31,6 +32,7 @@ import { AppController } from './app.controller';
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     CryptoCurrencyModule,
     InvestmentsModule,
+    CryptoRiskModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],

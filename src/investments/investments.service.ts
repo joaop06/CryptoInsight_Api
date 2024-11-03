@@ -33,11 +33,14 @@ export class InvestmentsService implements InvestmentsServiceInterface {
                 },
                 crypto: {
                     id: true,
+                    low: true,
+                    date: true,
+                    high: true,
                     name: true,
-                    symbol: true,
-                    price: true,
-                    marketCap: true,
-                    circulatingSupply: true
+                    open: true,
+                    close: true,
+                    volume: true,
+                    currency: true,
                 }
             }
         });
