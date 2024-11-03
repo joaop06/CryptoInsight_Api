@@ -94,20 +94,20 @@ export class CryptoRiskService implements OnModuleInit {
 
         await Promise.all(cryptos.map(async (crypto, i) => {
             try {
-                if (!crypto.name || process.env.ENABLE_RISK_MODEL_TRAINING === 'true') {
+                if (!crypto.risk || process.env.ENABLE_RISK_MODEL_TRAINING === 'true') {
                     const risk = await this.getRiskClassification(crypto);
                     await this.cryptoCurrencyService.update(crypto.id, { ...crypto, risk });
-                }
 
-                // Log a cada 10% de conclusão
-                const progressPercentage = Math.floor((i + 1) / totalLength * 100);
-                if (progressPercentage % 10 === 0) {
-                    const newLog = `Classificação de Risco: ${progressPercentage}%`
-                    if (newLog != log) {
-                        log = newLog;
-                        console.log(log);
-                    }
-                };
+                    // Log a cada 10% de conclusão
+                    const progressPercentage = Math.floor((i + 1) / totalLength * 100);
+                    if (progressPercentage % 10 === 0) {
+                        const newLog = `Classificação de Risco: ${progressPercentage}%`
+                        if (newLog != log) {
+                            log = newLog;
+                            console.log(log);
+                        }
+                    };
+                }
 
             } catch (e) {
                 console.error(e);
@@ -129,15 +129,19 @@ export class CryptoRiskService implements OnModuleInit {
             const processedData = tf.tensor2d([this.preprocessData(crypto)]);;
 
             const prediction = model.predict(processedData) as tf.Tensor;
+
             const result = Math.max(...prediction.dataSync());
+            const [low, medium, high] = prediction.dataSync();
+
 
             let risk: string;
-
-            if (result < 0.82) risk = 'Baixo';
-            else if (result >= 0.82 && result <= 0.95) risk = 'Médio';
+            if (result < 0.81) risk = 'Baixo';
+            else if (result >= 0.81 && result <= 0.95) risk = 'Médio';
             else risk = 'Alto';
 
             return risk;
+
+
 
         } catch (e) {
             new Exception(e.errorMessage || 'Erro ao classificar o risco do ativo');
