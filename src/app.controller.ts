@@ -5,12 +5,12 @@ import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
-    constructor(private readonly appService: AppService) { }
+  constructor(private readonly appService: AppService) {}
 
-    @Get()
-    @Public()
-    @ApiExcludeEndpoint()
-    welcome(): string {
-        return this.appService.welcome();
-    }
+  @Get()
+  @Public()
+  @ApiExcludeEndpoint()
+  welcome(): string {
+    return this.appService.welcome();
+  }
 }

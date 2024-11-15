@@ -1,11 +1,9 @@
-
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-
-    welcome(): string {
-        return `
+  welcome(): string {
+    return `
             <!DOCTYPE html>
             <html lang="en">
             <head>
@@ -74,5 +72,5 @@ export class AppService {
             </body>
             </html>
         `;
-    }
+  }
 }

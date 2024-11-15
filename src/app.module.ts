@@ -1,4 +1,6 @@
-require('dotenv').config()
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
@@ -13,7 +15,6 @@ import { CryptoCurrencyModule } from './crypto-currency/crypto-currency.module';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { CryptoRiskModule } from './crypto-risk/crypto-risk.module';
-
 
 @Module({
   imports: [
@@ -37,4 +38,4 @@ import { CryptoRiskModule } from './crypto-risk/crypto-risk.module';
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],
 })
-export class AppModule { }
+export class AppModule {}

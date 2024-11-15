@@ -10,4 +10,4 @@ import { CryptoCurrencyController } from './crypto-currency.controller';
   controllers: [CryptoCurrencyController],
   imports: [TypeOrmModule.forFeature([CryptoCurrencyEntity])],
 })
-export class CryptoCurrencyModule { }
+export class CryptoCurrencyModule {}

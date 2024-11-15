@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CryptoRiskService } from './crypto-risk.service';
 import { CryptoRiskController } from './crypto-risk.controller';
-import { CryptoCurrencyModule } from 'src/crypto-currency/crypto-currency.module';
+import { CryptoCurrencyModule } from '../crypto-currency/crypto-currency.module';
 
 @Module({
   exports: [CryptoRiskService],
@@ -9,4 +9,4 @@ import { CryptoCurrencyModule } from 'src/crypto-currency/crypto-currency.module
   imports: [CryptoCurrencyModule],
   controllers: [CryptoRiskController],
 })
-export class CryptoRiskModule { }
+export class CryptoRiskModule {}

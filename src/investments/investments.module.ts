@@ -5,9 +5,9 @@ import { InvestmentsService } from './investments.service';
 import { InvestmentsController } from './investments.controller';
 
 @Module({
-    exports: [InvestmentsService],
-    providers: [InvestmentsService],
-    controllers: [InvestmentsController],
-    imports: [TypeOrmModule.forFeature([InvestmentsEntity])]
+  exports: [InvestmentsService],
+  providers: [InvestmentsService],
+  controllers: [InvestmentsController],
+  imports: [TypeOrmModule.forFeature([InvestmentsEntity])],
 })
-export class InvestmentsModule { }
+export class InvestmentsModule {}

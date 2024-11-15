@@ -1,59 +1,59 @@
 import {
-    Entity,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn,
-    DeleteDateColumn,
-    PrimaryGeneratedColumn,
-    OneToMany,
+  Entity,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
-import { InvestmentsEntity } from 'src/investments/investments.entity';
+import { InvestmentsEntity } from '../investments/investments.entity';
 
 @Entity('crypto_currency')
 export class CryptoCurrencyEntity {
-    constructor(object?: Partial<CryptoCurrencyEntity>) {
-        Object.assign(this, object)
-    }
+  constructor(object?: Partial<CryptoCurrencyEntity>) {
+    Object.assign(this, object);
+  }
 
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column()
-    date: Date;
+  @Column()
+  date: Date;
 
-    @Column('float')
-    open: number;
+  @Column('float')
+  open: number;
 
-    @Column('float')
-    high: number;
+  @Column('float')
+  high: number;
 
-    @Column('float')
-    low: number;
+  @Column('float')
+  low: number;
 
-    @Column('float')
-    close: number;
+  @Column('float')
+  close: number;
 
-    @Column('bigint')
-    volume: number;
+  @Column('bigint')
+  volume: number;
 
-    @Column()
-    currency: string;
+  @Column()
+  currency: string;
 
-    @Column()
-    risk: string;
+  @Column()
+  risk: string;
 
-    @OneToMany(() => InvestmentsEntity, (investment) => investment.crypto)
-    investments: InvestmentsEntity[];
+  @OneToMany(() => InvestmentsEntity, (investment) => investment.crypto)
+  investments: InvestmentsEntity[];
 
-    @CreateDateColumn()
-    createdAt: Date | string;
+  @CreateDateColumn()
+  createdAt: Date | string;
 
-    @UpdateDateColumn()
-    updatedAt: Date | string;
+  @UpdateDateColumn()
+  updatedAt: Date | string;
 
-    @DeleteDateColumn()
-    deletedAt: Date | string;
+  @DeleteDateColumn()
+  deletedAt: Date | string;
 }
