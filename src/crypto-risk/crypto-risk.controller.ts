@@ -1,5 +1,5 @@
-import { Body, Controller, Get } from '@nestjs/common';
 import { CryptoRiskService } from './crypto-risk.service';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { RiskClassificationDto } from './dto/risk-classification.dto';
 import { RiskClassificationDoc } from './dto/crypto-risk.documentation';
 import { CryptoCurrencyEntity } from '../crypto-currency/crypto-currency.entity';
@@ -13,9 +13,10 @@ import {
 @ApiTags('crypto-risk')
 @Controller('crypto-risk')
 export class CryptoRiskController {
-  constructor(private readonly service: CryptoRiskService) {}
+  constructor(private readonly service: CryptoRiskService) { }
 
-  @Get()
+  @Post()
+  @HttpCode(200)
   @ApiOperation(RiskClassificationDoc.operation)
   @ApiOkResponse(RiskClassificationDoc.okResponse)
   @ApiBadRequestResponse(RiskClassificationDoc.badRequest)
